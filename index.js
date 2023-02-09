@@ -54,7 +54,10 @@ const registers = [
 ];
 
 function validate(current, arr, property) {
-  return arr.every((item) => !item[property].includes(current[property]));
+  return arr.every((item) => {
+    const inc = item[property].includes(current[property]);
+    console.log('esta', property, inc, item[property], current[property]);
+  });
 }
 
 function getAttendess(registers) {
