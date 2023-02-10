@@ -53,33 +53,20 @@ const registers = [
   },
 ];
 
-function validate(current, arr, property) {
-  return arr.every((item) => {
-    const inc = item[property].includes(current[property]);
-    console.log('esta', property, inc, item[property], current[property]);
-  });
+function validateNotIncludes(index, arr, property) {
+  const newArr = [...arr];
+  const current = newArr[index];
+  newArr.splice(index, 1);
+  return newArr.every((item, i) => !item[property].includes(current[property]));
 }
 
 function getAttendess(registers) {
-  const resultsAttendess = [];
-  const validated = [];
-  const attendess = registers.filter((register) => register.attended === true);
-  while (attendess.length > 0) {
-    const currentAtt = attendess.shift();
-    // console.log(currentAtt, attendess);
-    if (
-      (validate(currentAtt, attendess, 'ui') ||
-        validate(currentAtt, attendess, 'userId')) &&
-      (validate(currentAtt, validated, 'ui') ||
-        validate(currentAtt, validated, 'userId'))
-    ) {
-      resultsAttendess.push(currentAtt);
-    } else {
-      validated.push(currentAtt);
-    }
-  }
-
-  return resultsAttendess;
+  return registers.filter(
+    (register, index) =>
+      register.attended === true &&
+      validateNotIncludes(index, registers, 'ui') &&
+      validateNotIncludes(index, registers, 'userId')
+  );
 }
 
 console.log(getAttendess(registers));
